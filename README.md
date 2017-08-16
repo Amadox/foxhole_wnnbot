@@ -1,8 +1,9 @@
 ## Foxhole - Warden News Network Discord Bot
 
-Reads War Correspondancy from the official Discord Channel and 
+Reads war correspondence from the [official Foxhole Discord channel](https://discord.gg/S8mb6DS) and 
 * analyzes it, tracking relevant statistics.
-* reports Warden Propaganda to other Discord Servers/Channels based on it.
+* reports Warden propaganda to other Discord servers/channels based on it.
+  * Currently active at [Syther's/Foxtrot's Discord](https://discord.gg/5SujEGJ), filtered for general EU servers only
 
 ### Installation
 
@@ -12,7 +13,9 @@ Requires NPM and NodeJS:
 npm install
 ```
 
-The Bot will need it's own Discord Account (not an official Bot Account). Make sure to enter the Auth Token of that account here:
+### Configuration
+
+The Bot will need it's own Discord account (not an official bot account). Make sure to enter the auth token of that account here:
 ```bash
 cp auth.json.example auth.json
 vi auth.json
