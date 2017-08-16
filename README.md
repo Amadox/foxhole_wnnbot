@@ -1,4 +1,4 @@
-##Foxhole - Warden News Network Discord Bot
+## Foxhole - Warden News Network Discord Bot
 
 Reads War Correspondancy from the official Discord Channel and 
 * analyzes it, tracking relevant statistics.
