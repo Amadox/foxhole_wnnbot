@@ -218,6 +218,12 @@ module.exports = class AmaBot extends Discord.Client {
             const townName = text.slice(townSepTaken1 + 16, townSepTaken2);
             const status = text.slice(townSepTaken2 + 16, townSepTaken3);
             const score = status.slice(0, status.indexOf(" of"));
+            const scoreOf = status.slice(status.indexOf(" of ") + 4);
+
+            let scoreWardens = score;
+            if(factionName !== 'Wardens') {
+                scoreWardens = scoreOf - score;
+            }
 
             data.change = {
                 town: townName,
@@ -245,7 +251,7 @@ module.exports = class AmaBot extends Discord.Client {
             let broadcastMessage = message;
             if(randomMessage) {
                 data.wardenPropaganda = randomMessage;
-                broadcastMessage = `[${serverName} - ${mapName}] ${randomMessage} (${status})`;
+                broadcastMessage = `[${serverName} - ${mapName}] ${randomMessage}`;
             }
 
             let channels = this.getBroadcastChannels(serverName);
@@ -256,7 +262,15 @@ module.exports = class AmaBot extends Discord.Client {
                 });
             }
 
+            if(randomMessage && channels.length) {
+                this.sendBroadcast({
+                    to: channels,
+                    message: `[${serverName} - ${mapName}] We now have ${scoreWardens} of ${scoreOf} towns under our control.`
+                });
+            }
+
             warcorrServers.set(serverName+'.score.'+factionName, score).write();
+            warcorrServers.set(serverName+'.score.total', scoreOf).write();
             warcorrServers.get(serverName+'.changes').push({
                 date: data.date,
                 town: townName,
