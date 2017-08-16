@@ -340,9 +340,10 @@ module.exports = class AmaBot extends Discord.Client {
 
     getBroadcastChannels(serverName) {
         let broadcastTo = [];
-        for(let serverNamePart in this.config.channelIDs.write) {
-            if(this.config.channelIDs.write.hasOwnProperty(serverNamePart)) {
-                const channels = this.config.channelIDs.write[serverNamePart];
+        broadcastTo = broadcastTo.concat(this.config.channelIDs.write.all || []);
+        for(let serverNamePart in this.config.channelIDs.write.filtered) {
+            if(this.config.channelIDs.write.filtered.hasOwnProperty(serverNamePart)) {
+                const channels = this.config.channelIDs.write.filtered[serverNamePart];
                 if(serverName.indexOf(serverNamePart) !== -1) {
                     broadcastTo = broadcastTo.concat(channels);
                 }

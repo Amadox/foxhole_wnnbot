@@ -1,6 +1,6 @@
 ## Foxhole - Warden News Network Discord Bot
 
-Reads war correspondence from the [official Foxhole Discord channel](https://discord.gg/S8mb6DS) and 
+Reads war correspondence from the [official Foxhole Discord](https://discord.gg/S8mb6DS) and 
 * analyzes it, tracking relevant statistics.
 * reports Warden propaganda to other Discord servers/channels based on it.
   * Currently active at [Syther's/Foxtrot's Discord](https://discord.gg/5SujEGJ), filtered for general EU servers only
@@ -30,3 +30,4 @@ vi config.json
 ```bash
 node index.js
 ```
+It's recommended to run it inside a `screen` session.
