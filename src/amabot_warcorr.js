@@ -14,7 +14,7 @@ module.exports = class AmaBot_Warcorr {
         // hotfix because of wrongly reported server name:
         message = message.replace("Sledge-EU", "Sledge-GERMANY");
 
-        const regexBasic = /^\[([\w\d-\[\].]*)? - ([\w\d' ]+)?\] (.*)?$/g;
+        const regexBasic = /^\[([\w\d-\[\].=]*)? - ([\w\d' ]+)?\] (.*)?$/g;
         const matchesBasic = regexBasic.exec(message) || [];
 
         if(!matchesBasic) {
@@ -79,13 +79,13 @@ module.exports = class AmaBot_Warcorr {
         const regexVictory = /^The \*\*(\w+)?\*\* have defeated the (\w+)?!$/g;
         const matchesVictory = regexVictory.exec(data.message);
         if(matchesVictory) {
-            logger.info('VCTRY: ' + message);
-            data.type = 'victory';
-            data.details = {
-                'winner': matchesVictory[1],
-                'loser': matchesVictory[2]
-            };
             setTimeout(() => {
+                logger.info('VCTRY: ' + message);
+                data.type = 'victory';
+                data.details = {
+                    'winner': matchesVictory[1],
+                    'loser': matchesVictory[2]
+                };
                 warcorrVictory.bind(this)(data);
             }, 2000);
             return;
