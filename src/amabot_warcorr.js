@@ -91,7 +91,7 @@ module.exports = class AmaBot_Warcorr {
             return;
         }
 
-        logger.info('UNKWN: ' + message);
+        logger.debug('UNKWN: ' + message);
     }
 
     broadcastForServer(serverName, message) {
