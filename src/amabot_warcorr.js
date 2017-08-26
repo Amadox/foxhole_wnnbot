@@ -85,7 +85,9 @@ module.exports = class AmaBot_Warcorr {
                 'winner': matchesVictory[1],
                 'loser': matchesVictory[2]
             };
-            warcorrVictory.bind(this)(data);
+            setTimeout(() => {
+                warcorrVictory.bind(this)(data);
+            }, 2000);
             return;
         }
 
