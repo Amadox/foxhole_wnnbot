@@ -15,7 +15,7 @@ module.exports = class AmaBot extends Discord.Client {
 
         warcorrHistory.defaults({history: []}).write();
         warcorrServers.defaults({}).write();
-        warcorrVictories.defaults({victories: []}).write();
+        warcorrVictories.defaults({total: {}, maps: {}, servers: {}, combined: {}, history: []}).write();
     }
 
     init() {
@@ -150,8 +150,8 @@ module.exports = class AmaBot extends Discord.Client {
             };
 
             warcorrServers.set(serverName+'.stats', data.stats).write();
-            warcorrHistory.get('history').push(data).write();
-            warcorrServers.get(serverName+'.history').push(data).write();
+            //warcorrHistory.get('history').push(data).write();
+            //warcorrServers.get(serverName+'.history').push(data).write();
 
         } else if(factionSep1 !== -1 && townSepLost1 !== -1 && townSepLost2 !== -1) {
             // [Barracks - Endless Shore] The **Colonials** have lost **Enduring Post**.
@@ -220,11 +220,6 @@ module.exports = class AmaBot extends Discord.Client {
             const score = status.slice(0, status.indexOf(" of"));
             const scoreOf = status.slice(status.indexOf(" of ") + 4);
 
-            let scoreWardens = score;
-            if(factionName !== 'Wardens') {
-                scoreWardens = scoreOf - score;
-            }
-
             data.change = {
                 town: townName,
                 from: 'neutral',
@@ -238,7 +233,7 @@ module.exports = class AmaBot extends Discord.Client {
                     'Civilians cheer as we fortify **{townName}** against colonial attacks.',
                 ],
                 Colonials: [
-                    'The enemy has brutally taken control over **{townName}**',
+                    'The enemy has brutally taken control over **{townName}**.',
                     '**{townName}** has fallen into enemy hands. We need to free it!',
                     'The Colonial Invaders have started to fortify **{townName}**. Pray for the local population...',
                 ]
@@ -251,7 +246,7 @@ module.exports = class AmaBot extends Discord.Client {
             let broadcastMessage = message;
             if(randomMessage) {
                 data.wardenPropaganda = randomMessage;
-                broadcastMessage = `[${serverName} - ${mapName}] ${randomMessage}`;
+                broadcastMessage = `[${serverName} - ${mapName}] ${randomMessage} The **${factionName}** now have **${score} of ${scoreOf}** towns.`;
             }
 
             let channels = this.getBroadcastChannels(serverName);
@@ -259,13 +254,6 @@ module.exports = class AmaBot extends Discord.Client {
                 this.sendBroadcast({
                     to: channels,
                     message: broadcastMessage
-                });
-            }
-
-            if(randomMessage && channels.length) {
-                this.sendBroadcast({
-                    to: channels,
-                    message: `[${serverName} - ${mapName}] We now have ${scoreWardens} of ${scoreOf} towns under our control.`
                 });
             }
 
