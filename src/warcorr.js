@@ -1,19 +1,33 @@
 const logger = require('./logger.js');
-const warcorrStats = require('./amabot_warcorr_stats.js');
-const warcorrTownLost = require('./amabot_warcorr_townlost.js');
-const warcorrTownTaken = require('./amabot_warcorr_towntaken.js');
-const warcorrVictory = require('./amabot_warcorr_victory.js');
+const warcorrStats = require('./warcorr_stats.js');
+const warcorrTownLost = require('./warcorr_townlost.js');
+const warcorrTownTaken = require('./warcorr_towntaken.js');
+const warcorrVictory = require('./warcorr_victory.js');
+const config = require('../config.json');
 
-module.exports = class AmaBot_Warcorr {
+module.exports = class Warcorr {
 
-    constructor(amabot) {
-        this.amabot = amabot;
+    /**
+     * @param {Discord.Client} client DiscordJS Client
+     */
+    setClient(client) {
+        this.client = client;
+
+        client.on('message', (message) => {
+            if(config.readChannel === message.channel.id) {
+                try {
+                    this.processMessage(message.content);
+                } catch(err) {
+                    logger.error(err);
+                }
+            }
+        });
     }
 
+    /**
+     * @param {string} message
+     */
     processMessage(message) {
-        // hotfix because of wrongly reported server name:
-        message = message.replace("Sledge-EU", "Sledge-GERMANY");
-
         const regexBasic = /^\[([\w\d-\[\].=]*)? - ([\w\d' ]+)?\] (.*)?$/g;
         const matchesBasic = regexBasic.exec(message) || [];
 
@@ -95,22 +109,22 @@ module.exports = class AmaBot_Warcorr {
     }
 
     broadcastForServer(serverName, message) {
+        if(!this.client) return;
         let channels = this.getBroadcastChannels(serverName);
         if(channels.length) {
-            this.amabot.sendBroadcast({
-                to: channels,
-                message: message
+            channels.forEach((channelID) => {
+                this.client.channels.get(channelID).send(message);
             });
         }
     }
 
     getBroadcastChannels(serverName) {
         let broadcastTo = [];
-        broadcastTo = broadcastTo.concat(this.amabot.config.warCorr.writeChannels.all || []);
+        broadcastTo = broadcastTo.concat(config.warCorr.writeChannels.all || []);
 
-        for(let serverNamePart in this.amabot.config.warCorr.writeChannels.filtered.serverName) {
-            if(this.amabot.config.warCorr.writeChannels.filtered.serverName.hasOwnProperty(serverNamePart)) {
-                const channels = this.amabot.config.warCorr.writeChannels.filtered.serverName[serverNamePart];
+        for(let serverNamePart in config.warCorr.writeChannels.filtered.serverName) {
+            if(config.warCorr.writeChannels.filtered.serverName.hasOwnProperty(serverNamePart)) {
+                const channels = config.warCorr.writeChannels.filtered.serverName[serverNamePart];
                 if(serverName.indexOf(serverNamePart) !== -1) {
                     broadcastTo = broadcastTo.concat(channels);
                 }

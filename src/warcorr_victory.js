@@ -7,7 +7,7 @@ module.exports = function(data) {
         let msgText = `${messagePrefix} ${message}`;
 
         if(serverName === 'Dog6-Europe') {
-            msgText = `@Foxtrot Squad ${msgText}`;
+            msgText = `${msgText} <@Foxtrot Squad>`;
         }
 
         this.broadcastForServer(serverName, msgText);
@@ -23,7 +23,7 @@ module.exports = function(data) {
             Colonials: [
                 '**All of {mapName} has fallen into enemy hands. We suffered a tragic defeat**.',
                 '**We might have suffered defeat this time, but we will not lose the war.**',
-                '**The population of {mapName} shudders in terror as the colonial invaders defeat** us.**',
+                '**The population of {mapName} shudders in terror as the colonial invaders defeat us.**',
             ]
         };
 
