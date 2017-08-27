@@ -1,3 +1,4 @@
+const Discord = require('discord.js');
 const logger = require('./logger.js');
 const warcorrStats = require('./warcorr_stats.js');
 const warcorrTownLost = require('./warcorr_townlost.js');
@@ -7,13 +8,15 @@ const config = require('../config.json');
 
 module.exports = class Warcorr {
 
-    /**
-     * @param {Discord.Client} client DiscordJS Client
-     */
-    setClient(client) {
-        this.client = client;
+    constructor() {
+        this.client = new Discord.Client();
 
-        client.on('message', (message) => {
+        this.client.on('ready', () => {
+            logger.info('Connected, Logged in as: ');
+            logger.info(this.client.user.username + ' - (ID ' + this.client.user.id + ')');
+        });
+
+        this.client.on('message', (message) => {
             if(config.readChannel === message.channel.id) {
                 try {
                     this.processMessage(message.content);
@@ -22,6 +25,10 @@ module.exports = class Warcorr {
                 }
             }
         });
+    }
+
+    run(token) {
+        this.client.login(token);
     }
 
     /**
