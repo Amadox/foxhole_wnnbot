@@ -7,7 +7,7 @@ module.exports = function(data) {
         let msgText = `${messagePrefix} ${message}`;
 
         if(serverName === 'Dog6-Europe') {
-            msgText = `${msgText} <@Foxtrot Squad>`;
+            msgText = `${msgText} <@Foxtrot Squad>, <@Recruits>`;
         }
 
         this.broadcastForServer(serverName, msgText);
