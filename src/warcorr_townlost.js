@@ -1,6 +1,21 @@
+const warcorrMapLocationRepository = require('./model/warcorr_map_location.js');
+const warcorrMessageNewsRepository = require('./model/warcorr_message_news.js');
+
 const ENABLE_PROPAGANDA = false;
 module.exports = function(data) {
     "use strict";
+
+    warcorrMapLocationRepository.create({
+        'uid_map': data.map.uid,
+        'name': data.details.location,
+    }).then((mapLocation) => {
+        warcorrMessageNewsRepository.create({
+            'uid_message': data.message.uid,
+            'faction': data.details.faction,
+            'action': data.details.action,
+            'uid_map_location': mapLocation.uid,
+        });
+    });
 
     if(ENABLE_PROPAGANDA) {
         const wardenPropaganda = {
@@ -25,7 +40,7 @@ module.exports = function(data) {
         this.broadcastForServer(data.server.name, message);
     } else {
         const messagePrefix = `[${data.server.name} - ${data.map.name}]`;
-        const message = `${messagePrefix} ${data.message}`;
+        const message = `${messagePrefix} ${data.message.content}`;
         this.broadcastForServer(data.server.name, message);
     }
 };

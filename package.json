@@ -6,6 +6,7 @@
   "author": "Amadox",
   "dependencies": {
     "discord.js": "^11.1.0",
+    "sqlite3": "^3.1.9",
     "winston": "^2.3.1"
   }
 }

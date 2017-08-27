@@ -1,3 +1,5 @@
+const warcorrMessageVictoryRepository = require('./model/warcorr_message_victory.js');
+
 const ENABLE_PROPAGANDA = true;
 module.exports = function(data) {
     "use strict";
@@ -13,6 +15,12 @@ module.exports = function(data) {
         this.broadcastForServer(serverName, msgText);
     };
 
+    warcorrMessageVictoryRepository.create({
+        'uid_message': data.message.uid,
+        'faction_winner': data.details.faction_winner,
+        'faction_loser': data.details.faction_loser,
+    });
+
     if(ENABLE_PROPAGANDA) {
         const wardenPropaganda = {
             Wardens: [
@@ -27,11 +35,11 @@ module.exports = function(data) {
             ]
         };
 
-        const factionMessages = wardenPropaganda[data.details.winner] || [];
+        const factionMessages = wardenPropaganda[data.details.faction_winner] || [];
         let randomMessage = factionMessages[Math.floor(Math.random()*factionMessages.length)];
         randomMessage = randomMessage.replace('{mapName}', data.map.name);
         broadcast(data.server.name, data.map.name, randomMessage);
     } else {
-        broadcast(data.server.name, data.map.name, data.message);
+        broadcast(data.server.name, data.map.name, data.message.content);
     }
 };
